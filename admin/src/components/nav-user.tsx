@@ -91,7 +91,7 @@ export function NavUser() {
 									<AvatarImage src={"avatar"} alt={adminData?.fullName} />
 									<AvatarFallback className="rounded-lg">
 										{
-											adminData?.fullName.split(" ")
+											adminData?.fullName?.split(" ")
 												.map((n: string) => n[0])
 												.join("")
 												.toUpperCase()
