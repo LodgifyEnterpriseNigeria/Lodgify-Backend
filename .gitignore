@@ -1,0 +1,34 @@
+# Node/Bun dependencies
+node_modules/
+bun.lockb
+
+# Bun cache
+.bun/
+
+# VSCode settings
+.vscode/
+.history/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Env files
+.env
+.env.*
+
+# Build output
+dist/
+build/
+out/
+.cache/
+.next/
+.svelte-kit/
+.vercel/
+.netlify/

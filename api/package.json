@@ -1,0 +1,41 @@
+{
+  "name": "api",
+  "version": "1.0.50",
+  "scripts": {
+    "test": "bun test",
+    "start": "bun run build/index.js",
+    "build-render": "bun install && bun run build",
+    "build": "bun build ./src/index.ts --outdir ./build --target bun",
+    "dev": "bun run --watch src/index.ts",
+    "email-dev": "email dev --dir ./src/emails --port 8001",
+    "docker-build": "docker build -t razor-api ."
+  },
+  "dependencies": {
+    "elysia": "latest",
+    "@elysiajs/cors": "^1.2.0",
+    "@elysiajs/jwt": "^1.1.1",
+    "@elysiajs/static": "^1.2.0",
+    "@elysiajs/swagger": "^1.1.6",
+    "@react-email/components": "^0.0.32",
+    "@react-email/render": "1.0.4",
+    "@types/nodemailer": "^6.4.17",
+    "@types/qrcode": "^1.5.5",
+    "@types/react": "^19.0.6",
+    "@types/react-dom": "^19.0.3",
+    "axios": "^1.7.9",
+    "chalk": "^5.4.0",
+    "cloudinary": "^2.5.1",
+    "mongoose": "^8.9.2",
+    "multiparty": "^4.2.3",
+    "nodemailer": "^6.9.16",
+    "ora": "^8.1.1",
+    "qrcode": "^1.5.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-email": "^4.0.7"
+  },
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "module": "src/index.js"
+}
