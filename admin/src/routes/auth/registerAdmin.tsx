@@ -1,6 +1,7 @@
 import { Icon } from '@iconify-icon/react';
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { RegisterForm } from '@/components/blocks/register.block'
+import { pannelData } from '@/utils/configs/pannel.config';
 
 export const Route = createFileRoute('/auth/registerAdmin')({
     beforeLoad: async ({ context }) => {
@@ -23,7 +24,7 @@ function RouteComponent() {
                             <div className="bg-primary text-primary-foreground flex size-10 items-center justify-center rounded-md">
                                 <Icon icon="eos-icons:admin" width="24" height="24" />
                             </div>
-                            Razor Admin
+                            {pannelData.name}
                         </a>
                     </div>
                     <div className="flex flex-1 items-center justify-center">

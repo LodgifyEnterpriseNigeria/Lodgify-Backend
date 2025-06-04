@@ -14,7 +14,11 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as AdminImport } from './routes/_admin'
 import { Route as IndexImport } from './routes/index'
 import { Route as AuthRegisterAdminImport } from './routes/auth/registerAdmin'
+import { Route as AdminUsersImport } from './routes/_admin/users'
+import { Route as AdminTasksImport } from './routes/_admin/tasks'
 import { Route as AdminOverviewImport } from './routes/_admin/overview'
+import { Route as AdminAccountIndexImport } from './routes/_admin/account/index'
+import { Route as AdminAccountSecurityImport } from './routes/_admin/account/security'
 
 // Create/Update Routes
 
@@ -35,9 +39,33 @@ const AuthRegisterAdminRoute = AuthRegisterAdminImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
+const AdminUsersRoute = AdminUsersImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminTasksRoute = AdminTasksImport.update({
+  id: '/tasks',
+  path: '/tasks',
+  getParentRoute: () => AdminRoute,
+} as any)
+
 const AdminOverviewRoute = AdminOverviewImport.update({
   id: '/overview',
   path: '/overview',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminAccountIndexRoute = AdminAccountIndexImport.update({
+  id: '/account/',
+  path: '/account/',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminAccountSecurityRoute = AdminAccountSecurityImport.update({
+  id: '/account/security',
+  path: '/account/security',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -66,12 +94,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminOverviewImport
       parentRoute: typeof AdminImport
     }
+    '/_admin/tasks': {
+      id: '/_admin/tasks'
+      path: '/tasks'
+      fullPath: '/tasks'
+      preLoaderRoute: typeof AdminTasksImport
+      parentRoute: typeof AdminImport
+    }
+    '/_admin/users': {
+      id: '/_admin/users'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof AdminUsersImport
+      parentRoute: typeof AdminImport
+    }
     '/auth/registerAdmin': {
       id: '/auth/registerAdmin'
       path: '/auth/registerAdmin'
       fullPath: '/auth/registerAdmin'
       preLoaderRoute: typeof AuthRegisterAdminImport
       parentRoute: typeof rootRoute
+    }
+    '/_admin/account/security': {
+      id: '/_admin/account/security'
+      path: '/account/security'
+      fullPath: '/account/security'
+      preLoaderRoute: typeof AdminAccountSecurityImport
+      parentRoute: typeof AdminImport
+    }
+    '/_admin/account/': {
+      id: '/_admin/account/'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AdminAccountIndexImport
+      parentRoute: typeof AdminImport
     }
   }
 }
@@ -80,10 +136,18 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminOverviewRoute: typeof AdminOverviewRoute
+  AdminTasksRoute: typeof AdminTasksRoute
+  AdminUsersRoute: typeof AdminUsersRoute
+  AdminAccountSecurityRoute: typeof AdminAccountSecurityRoute
+  AdminAccountIndexRoute: typeof AdminAccountIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminOverviewRoute: AdminOverviewRoute,
+  AdminTasksRoute: AdminTasksRoute,
+  AdminUsersRoute: AdminUsersRoute,
+  AdminAccountSecurityRoute: AdminAccountSecurityRoute,
+  AdminAccountIndexRoute: AdminAccountIndexRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
@@ -92,14 +156,22 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AdminRouteWithChildren
   '/overview': typeof AdminOverviewRoute
+  '/tasks': typeof AdminTasksRoute
+  '/users': typeof AdminUsersRoute
   '/auth/registerAdmin': typeof AuthRegisterAdminRoute
+  '/account/security': typeof AdminAccountSecurityRoute
+  '/account': typeof AdminAccountIndexRoute
 }
 
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof AdminRouteWithChildren
   '/overview': typeof AdminOverviewRoute
+  '/tasks': typeof AdminTasksRoute
+  '/users': typeof AdminUsersRoute
   '/auth/registerAdmin': typeof AuthRegisterAdminRoute
+  '/account/security': typeof AdminAccountSecurityRoute
+  '/account': typeof AdminAccountIndexRoute
 }
 
 export interface FileRoutesById {
@@ -107,15 +179,44 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_admin': typeof AdminRouteWithChildren
   '/_admin/overview': typeof AdminOverviewRoute
+  '/_admin/tasks': typeof AdminTasksRoute
+  '/_admin/users': typeof AdminUsersRoute
   '/auth/registerAdmin': typeof AuthRegisterAdminRoute
+  '/_admin/account/security': typeof AdminAccountSecurityRoute
+  '/_admin/account/': typeof AdminAccountIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '' | '/overview' | '/auth/registerAdmin'
+  fullPaths:
+    | '/'
+    | ''
+    | '/overview'
+    | '/tasks'
+    | '/users'
+    | '/auth/registerAdmin'
+    | '/account/security'
+    | '/account'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '' | '/overview' | '/auth/registerAdmin'
-  id: '__root__' | '/' | '/_admin' | '/_admin/overview' | '/auth/registerAdmin'
+  to:
+    | '/'
+    | ''
+    | '/overview'
+    | '/tasks'
+    | '/users'
+    | '/auth/registerAdmin'
+    | '/account/security'
+    | '/account'
+  id:
+    | '__root__'
+    | '/'
+    | '/_admin'
+    | '/_admin/overview'
+    | '/_admin/tasks'
+    | '/_admin/users'
+    | '/auth/registerAdmin'
+    | '/_admin/account/security'
+    | '/_admin/account/'
   fileRoutesById: FileRoutesById
 }
 
@@ -152,15 +253,35 @@ export const routeTree = rootRoute
     "/_admin": {
       "filePath": "_admin.tsx",
       "children": [
-        "/_admin/overview"
+        "/_admin/overview",
+        "/_admin/tasks",
+        "/_admin/users",
+        "/_admin/account/security",
+        "/_admin/account/"
       ]
     },
     "/_admin/overview": {
       "filePath": "_admin/overview.tsx",
       "parent": "/_admin"
     },
+    "/_admin/tasks": {
+      "filePath": "_admin/tasks.tsx",
+      "parent": "/_admin"
+    },
+    "/_admin/users": {
+      "filePath": "_admin/users.tsx",
+      "parent": "/_admin"
+    },
     "/auth/registerAdmin": {
       "filePath": "auth/registerAdmin.tsx"
+    },
+    "/_admin/account/security": {
+      "filePath": "_admin/account/security.tsx",
+      "parent": "/_admin"
+    },
+    "/_admin/account/": {
+      "filePath": "_admin/account/index.tsx",
+      "parent": "/_admin"
     }
   }
 }

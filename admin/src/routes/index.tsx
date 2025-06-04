@@ -1,6 +1,7 @@
 import { Icon } from '@iconify-icon/react';
 import { createFileRoute, redirect } from '@tanstack/react-router'
 import { LoginForm } from '@/components/blocks/login.blocks'
+import { pannelData } from '@/utils/configs/pannel.config';
 
 
 export const Route = createFileRoute('/')({
@@ -22,9 +23,14 @@ function App() {
                     <div className="flex justify-center gap-2 md:justify-start">
                         <a href="/" className="flex items-center gap-2 font-medium">
                             <div className="bg-primary text-primary-foreground flex size-10 items-center justify-center rounded-md">
-                                <Icon icon="eos-icons:admin" width="24" height="24" />
+                                <img
+                                    src={pannelData.logo}
+                                    alt=""
+                                    className="invert-0 w-6 h-6 dark:invert-100"
+                                />
+                                {/* <Icon icon="eos-icons:admin" /> */}
                             </div>
-                            Razor Admin
+                            {pannelData.name}
                         </a>
                     </div>
                     <div className="flex flex-1 items-center justify-center">

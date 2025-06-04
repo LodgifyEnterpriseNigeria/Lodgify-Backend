@@ -136,3 +136,13 @@ code {
     @apply bg-background text-foreground;
   }
 }
+
+
+/* globals.css or tailwind.css */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}

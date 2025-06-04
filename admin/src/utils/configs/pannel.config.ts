@@ -1,7 +1,7 @@
 // import logo from "../lib/images/logo.svg"
+import logo from "/logo.svg";
 
 export const pannelData = {
-    name: "Razor",
-    // logo: logo,
-    type: "Company"
+    name: "Lodgify Admin",
+    logo: logo,
 }

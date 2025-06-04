@@ -2,7 +2,7 @@ import { Outlet, createRootRouteWithContext } from '@tanstack/react-router'
 import { Toaster } from 'sonner'
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ThemeProvider } from '@/components/theme-provider'
+import { ThemeProvider } from '@/components/blocks/theme-provider'
 
 interface MyRouterContext {
   queryClient: QueryClient

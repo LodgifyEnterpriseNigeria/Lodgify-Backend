@@ -10,17 +10,16 @@ import {
     IconFolder,
     IconHelp,
     IconInnerShadowTop,
-    IconListDetails,
     IconReport,
     IconSearch,
     IconSettings,
     IconUsers,
 } from "@tabler/icons-react"
 
-import { NavDocuments } from "@/components/nav-documents"
-import { NavMain } from "@/components/nav-main"
-import { NavSecondary } from "@/components/nav-secondary"
-import { NavUser } from "@/components/nav-user"
+// import { NavDocuments } from "@/components/nav-documents"
+import { NavMain } from "@/components/blocks/nav-main"
+import { NavSecondary } from "@/components/blocks/nav-secondary"
+import { NavUser } from "@/components/blocks/nav-user"
 import {
     Sidebar,
     SidebarContent,
@@ -30,6 +29,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from "@/components/ui/sidebar"
+import { pannelData } from "@/utils/configs/pannel.config"
 
 const data = {
     navMain: [
@@ -39,24 +39,14 @@ const data = {
             icon: IconDashboard,
         },
         {
-            title: "Lifecycle",
-            url: "#",
-            icon: IconListDetails,
-        },
-        {
-            title: "Analytics",
-            url: "#",
-            icon: IconChartBar,
-        },
-        {
-            title: "Projects",
-            url: "#",
-            icon: IconFolder,
-        },
-        {
-            title: "Team",
-            url: "#",
+            title: "Users",
+            url: "/users",
             icon: IconUsers,
+        },
+        {
+            title: "Tasks",
+            url: "/tasks",
+            icon: IconChartBar,
         },
     ],
     navClouds: [
@@ -154,8 +144,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             className="data-[slot=sidebar-menu-button]:!p-1.5"
                         >
                             <a href="#">
-                                <IconInnerShadowTop className="!size-5" />
-                                <span className="text-base font-semibold">Razor Admin</span>
+                                <img
+                                    src={pannelData.logo}
+                                    alt=""
+                                    className=" !size-5 invert-100 w-6 h-6 dark:invert-0"
+                                />
+                                {/* <IconInnerShadowTop className="!size-5" /> */}
+                                <span className="text-base font-semibold">{pannelData.name}</span>
                             </a>
                         </SidebarMenuButton>
                     </SidebarMenuItem>

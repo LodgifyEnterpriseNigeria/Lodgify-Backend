@@ -9,6 +9,7 @@ import { cn } from "@/utils/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { useAuth } from "@/hooks/use-auth";
+import { pannelData } from "@/utils/configs/pannel.config";
 
 const formSchema = z.object({
     email: z.string().min(2).max(50),
@@ -49,7 +50,7 @@ export function LoginForm({
 
             <div className="flex flex-col gap-6">
                 <div className="flex flex-col items-center gap-2">
-                    <h1 className="text-xl font-bold">Welcome to Razor</h1>
+                    <h1 className="text-xl font-bold">Welcome to {pannelData.name}</h1>
                     <div className="text-center text-sm">
                         Don&apos;t have an account?{" "}
                         <Link to="/auth/registerAdmin" className="underline underline-offset-4">
