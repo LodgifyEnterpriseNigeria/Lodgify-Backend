@@ -6,6 +6,7 @@ export interface IUser {
     dateOfBirth?: Date;
     username: string;
     gender: "male" | "female" | "other";
+    address: string,
 }
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -27,6 +28,10 @@ const userSchema = new mongoose.Schema<IUser>({
         type: String,
         enum: ["male", "female", "other"],
         required: true,
+    },
+    address: {
+        type: String,
+        default: ""
     }
 }, { timestamps: true });
 

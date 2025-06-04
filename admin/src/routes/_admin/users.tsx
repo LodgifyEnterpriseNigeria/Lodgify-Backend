@@ -3,6 +3,8 @@ import type { User } from '@/components/contents/users/columns'
 import { UserCards } from '@/components/contents/users/cards'
 import { userColumns } from '@/components/contents/users/columns'
 import UaerTable from '@/components/contents/users/dataTable'
+import Header from '@/components/blocks/header'
+import { Button } from '@/components/ui/button'
 
 export const Route = createFileRoute('/_admin/users')({
     component: RouteComponent,
@@ -104,6 +106,10 @@ const dummyData: Array<User> = [
 function RouteComponent() {
     return (
         <>
+            <Header title={`User Analytics`} subText='Manage and analyze user data'>
+                <Button>Create User</Button>
+            </Header>
+
             <UserCards />
             <UaerTable data={dummyData} columns={userColumns} />
         </>

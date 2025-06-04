@@ -5,3 +5,7 @@ export const pannelData = {
     name: "Lodgify Admin",
     logo: logo,
 }
+
+export function setTitle() {
+    document.title = pannelData.name;
+}

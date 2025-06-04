@@ -5,14 +5,5 @@ export const Route = createFileRoute('/_admin/account/')({
 })
 
 function RouteComponent() {
-  return (
-    <div>
-      <h1>Account Page</h1>
-      <ul>
-        <li><a href="/admin/profile">Admin Profile</a></li>
-        <li><a href="/admin/security">Security</a></li>
-        <li><a href="/admin/account-actions">Other Account Related Actions</a></li>
-      </ul>
-    </div>
-  );
+  return <div>Hello "/_admin/account/"!</div>
 }

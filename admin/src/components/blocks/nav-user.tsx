@@ -110,7 +110,7 @@ export function NavUser() {
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
 						<DropdownMenuGroup>
-							<Link to='/account'>
+							<Link to='/settings/account'>
 								<DropdownMenuItem>
 									<IconUserCircle />
 									Account

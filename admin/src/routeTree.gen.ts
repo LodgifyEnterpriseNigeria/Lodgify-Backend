@@ -16,9 +16,13 @@ import { Route as IndexImport } from './routes/index'
 import { Route as AuthRegisterAdminImport } from './routes/auth/registerAdmin'
 import { Route as AdminUsersImport } from './routes/_admin/users'
 import { Route as AdminTasksImport } from './routes/_admin/tasks'
+import { Route as AdminSettingsImport } from './routes/_admin/settings'
 import { Route as AdminOverviewImport } from './routes/_admin/overview'
+import { Route as AdminSettingsIndexImport } from './routes/_admin/settings/index'
 import { Route as AdminAccountIndexImport } from './routes/_admin/account/index'
-import { Route as AdminAccountSecurityImport } from './routes/_admin/account/security'
+import { Route as AdminSettingsPrivacyImport } from './routes/_admin/settings/privacy'
+import { Route as AdminSettingsNotificationsImport } from './routes/_admin/settings/notifications'
+import { Route as AdminSettingsAccountImport } from './routes/_admin/settings/account'
 
 // Create/Update Routes
 
@@ -51,10 +55,22 @@ const AdminTasksRoute = AdminTasksImport.update({
   getParentRoute: () => AdminRoute,
 } as any)
 
+const AdminSettingsRoute = AdminSettingsImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+
 const AdminOverviewRoute = AdminOverviewImport.update({
   id: '/overview',
   path: '/overview',
   getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminSettingsIndexRoute = AdminSettingsIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminSettingsRoute,
 } as any)
 
 const AdminAccountIndexRoute = AdminAccountIndexImport.update({
@@ -63,10 +79,24 @@ const AdminAccountIndexRoute = AdminAccountIndexImport.update({
   getParentRoute: () => AdminRoute,
 } as any)
 
-const AdminAccountSecurityRoute = AdminAccountSecurityImport.update({
-  id: '/account/security',
-  path: '/account/security',
-  getParentRoute: () => AdminRoute,
+const AdminSettingsPrivacyRoute = AdminSettingsPrivacyImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => AdminSettingsRoute,
+} as any)
+
+const AdminSettingsNotificationsRoute = AdminSettingsNotificationsImport.update(
+  {
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => AdminSettingsRoute,
+  } as any,
+)
+
+const AdminSettingsAccountRoute = AdminSettingsAccountImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => AdminSettingsRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
@@ -94,6 +124,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminOverviewImport
       parentRoute: typeof AdminImport
     }
+    '/_admin/settings': {
+      id: '/_admin/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AdminSettingsImport
+      parentRoute: typeof AdminImport
+    }
     '/_admin/tasks': {
       id: '/_admin/tasks'
       path: '/tasks'
@@ -115,12 +152,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRegisterAdminImport
       parentRoute: typeof rootRoute
     }
-    '/_admin/account/security': {
-      id: '/_admin/account/security'
-      path: '/account/security'
-      fullPath: '/account/security'
-      preLoaderRoute: typeof AdminAccountSecurityImport
-      parentRoute: typeof AdminImport
+    '/_admin/settings/account': {
+      id: '/_admin/settings/account'
+      path: '/account'
+      fullPath: '/settings/account'
+      preLoaderRoute: typeof AdminSettingsAccountImport
+      parentRoute: typeof AdminSettingsImport
+    }
+    '/_admin/settings/notifications': {
+      id: '/_admin/settings/notifications'
+      path: '/notifications'
+      fullPath: '/settings/notifications'
+      preLoaderRoute: typeof AdminSettingsNotificationsImport
+      parentRoute: typeof AdminSettingsImport
+    }
+    '/_admin/settings/privacy': {
+      id: '/_admin/settings/privacy'
+      path: '/privacy'
+      fullPath: '/settings/privacy'
+      preLoaderRoute: typeof AdminSettingsPrivacyImport
+      parentRoute: typeof AdminSettingsImport
     }
     '/_admin/account/': {
       id: '/_admin/account/'
@@ -129,24 +180,49 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAccountIndexImport
       parentRoute: typeof AdminImport
     }
+    '/_admin/settings/': {
+      id: '/_admin/settings/'
+      path: '/'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof AdminSettingsIndexImport
+      parentRoute: typeof AdminSettingsImport
+    }
   }
 }
 
 // Create and export the route tree
 
+interface AdminSettingsRouteChildren {
+  AdminSettingsAccountRoute: typeof AdminSettingsAccountRoute
+  AdminSettingsNotificationsRoute: typeof AdminSettingsNotificationsRoute
+  AdminSettingsPrivacyRoute: typeof AdminSettingsPrivacyRoute
+  AdminSettingsIndexRoute: typeof AdminSettingsIndexRoute
+}
+
+const AdminSettingsRouteChildren: AdminSettingsRouteChildren = {
+  AdminSettingsAccountRoute: AdminSettingsAccountRoute,
+  AdminSettingsNotificationsRoute: AdminSettingsNotificationsRoute,
+  AdminSettingsPrivacyRoute: AdminSettingsPrivacyRoute,
+  AdminSettingsIndexRoute: AdminSettingsIndexRoute,
+}
+
+const AdminSettingsRouteWithChildren = AdminSettingsRoute._addFileChildren(
+  AdminSettingsRouteChildren,
+)
+
 interface AdminRouteChildren {
   AdminOverviewRoute: typeof AdminOverviewRoute
+  AdminSettingsRoute: typeof AdminSettingsRouteWithChildren
   AdminTasksRoute: typeof AdminTasksRoute
   AdminUsersRoute: typeof AdminUsersRoute
-  AdminAccountSecurityRoute: typeof AdminAccountSecurityRoute
   AdminAccountIndexRoute: typeof AdminAccountIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminOverviewRoute: AdminOverviewRoute,
+  AdminSettingsRoute: AdminSettingsRouteWithChildren,
   AdminTasksRoute: AdminTasksRoute,
   AdminUsersRoute: AdminUsersRoute,
-  AdminAccountSecurityRoute: AdminAccountSecurityRoute,
   AdminAccountIndexRoute: AdminAccountIndexRoute,
 }
 
@@ -156,11 +232,15 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AdminRouteWithChildren
   '/overview': typeof AdminOverviewRoute
+  '/settings': typeof AdminSettingsRouteWithChildren
   '/tasks': typeof AdminTasksRoute
   '/users': typeof AdminUsersRoute
   '/auth/registerAdmin': typeof AuthRegisterAdminRoute
-  '/account/security': typeof AdminAccountSecurityRoute
+  '/settings/account': typeof AdminSettingsAccountRoute
+  '/settings/notifications': typeof AdminSettingsNotificationsRoute
+  '/settings/privacy': typeof AdminSettingsPrivacyRoute
   '/account': typeof AdminAccountIndexRoute
+  '/settings/': typeof AdminSettingsIndexRoute
 }
 
 export interface FileRoutesByTo {
@@ -170,8 +250,11 @@ export interface FileRoutesByTo {
   '/tasks': typeof AdminTasksRoute
   '/users': typeof AdminUsersRoute
   '/auth/registerAdmin': typeof AuthRegisterAdminRoute
-  '/account/security': typeof AdminAccountSecurityRoute
+  '/settings/account': typeof AdminSettingsAccountRoute
+  '/settings/notifications': typeof AdminSettingsNotificationsRoute
+  '/settings/privacy': typeof AdminSettingsPrivacyRoute
   '/account': typeof AdminAccountIndexRoute
+  '/settings': typeof AdminSettingsIndexRoute
 }
 
 export interface FileRoutesById {
@@ -179,11 +262,15 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_admin': typeof AdminRouteWithChildren
   '/_admin/overview': typeof AdminOverviewRoute
+  '/_admin/settings': typeof AdminSettingsRouteWithChildren
   '/_admin/tasks': typeof AdminTasksRoute
   '/_admin/users': typeof AdminUsersRoute
   '/auth/registerAdmin': typeof AuthRegisterAdminRoute
-  '/_admin/account/security': typeof AdminAccountSecurityRoute
+  '/_admin/settings/account': typeof AdminSettingsAccountRoute
+  '/_admin/settings/notifications': typeof AdminSettingsNotificationsRoute
+  '/_admin/settings/privacy': typeof AdminSettingsPrivacyRoute
   '/_admin/account/': typeof AdminAccountIndexRoute
+  '/_admin/settings/': typeof AdminSettingsIndexRoute
 }
 
 export interface FileRouteTypes {
@@ -192,11 +279,15 @@ export interface FileRouteTypes {
     | '/'
     | ''
     | '/overview'
+    | '/settings'
     | '/tasks'
     | '/users'
     | '/auth/registerAdmin'
-    | '/account/security'
+    | '/settings/account'
+    | '/settings/notifications'
+    | '/settings/privacy'
     | '/account'
+    | '/settings/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -205,18 +296,25 @@ export interface FileRouteTypes {
     | '/tasks'
     | '/users'
     | '/auth/registerAdmin'
-    | '/account/security'
+    | '/settings/account'
+    | '/settings/notifications'
+    | '/settings/privacy'
     | '/account'
+    | '/settings'
   id:
     | '__root__'
     | '/'
     | '/_admin'
     | '/_admin/overview'
+    | '/_admin/settings'
     | '/_admin/tasks'
     | '/_admin/users'
     | '/auth/registerAdmin'
-    | '/_admin/account/security'
+    | '/_admin/settings/account'
+    | '/_admin/settings/notifications'
+    | '/_admin/settings/privacy'
     | '/_admin/account/'
+    | '/_admin/settings/'
   fileRoutesById: FileRoutesById
 }
 
@@ -254,15 +352,25 @@ export const routeTree = rootRoute
       "filePath": "_admin.tsx",
       "children": [
         "/_admin/overview",
+        "/_admin/settings",
         "/_admin/tasks",
         "/_admin/users",
-        "/_admin/account/security",
         "/_admin/account/"
       ]
     },
     "/_admin/overview": {
       "filePath": "_admin/overview.tsx",
       "parent": "/_admin"
+    },
+    "/_admin/settings": {
+      "filePath": "_admin/settings.tsx",
+      "parent": "/_admin",
+      "children": [
+        "/_admin/settings/account",
+        "/_admin/settings/notifications",
+        "/_admin/settings/privacy",
+        "/_admin/settings/"
+      ]
     },
     "/_admin/tasks": {
       "filePath": "_admin/tasks.tsx",
@@ -275,13 +383,25 @@ export const routeTree = rootRoute
     "/auth/registerAdmin": {
       "filePath": "auth/registerAdmin.tsx"
     },
-    "/_admin/account/security": {
-      "filePath": "_admin/account/security.tsx",
-      "parent": "/_admin"
+    "/_admin/settings/account": {
+      "filePath": "_admin/settings/account.tsx",
+      "parent": "/_admin/settings"
+    },
+    "/_admin/settings/notifications": {
+      "filePath": "_admin/settings/notifications.tsx",
+      "parent": "/_admin/settings"
+    },
+    "/_admin/settings/privacy": {
+      "filePath": "_admin/settings/privacy.tsx",
+      "parent": "/_admin/settings"
     },
     "/_admin/account/": {
       "filePath": "_admin/account/index.tsx",
       "parent": "/_admin"
+    },
+    "/_admin/settings/": {
+      "filePath": "_admin/settings/index.tsx",
+      "parent": "/_admin/settings"
     }
   }
 }

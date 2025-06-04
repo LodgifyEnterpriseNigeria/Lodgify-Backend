@@ -8,7 +8,7 @@ import { UserValidator } from "../_setup";
 const registerUser = new Elysia()
     .post("/register", async ({ set, body, query }) => {
 
-        const validRoles = ["user"]
+        const validRoles = ["user", "agent"]
         const { email, password, fullName, phoneNumber, dateOfBirth, username, gender, profile } = body;
         const { role } = query
         try {
@@ -51,8 +51,8 @@ const registerUser = new Elysia()
                     set,
                     "Error while creating user"
                 );
-            }          
-            
+            }
+
 
             return SuccessHandler(
                 set,
@@ -70,5 +70,16 @@ const registerUser = new Elysia()
             );
         }
     }, UserValidator.create)
+    .post("/register/agent", async ({ set, body }) => {
+        try {
+
+        } catch (error) {
+            return ErrorHandler.ServerError(
+                set,
+                "Error registering agent",
+                error
+            );
+        }
+    })
 
 export default registerUser;
