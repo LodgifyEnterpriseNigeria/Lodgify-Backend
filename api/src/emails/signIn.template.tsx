@@ -20,7 +20,7 @@ export const WelcomeEmail = ({ name }: SignInData) => {
               height={80}
               src='/static/singleLogoRed.png'
             />
-            <Heading style={styles.heading}>Welcome to Huttspot, {name}!</Heading>
+            <Heading style={styles.heading}>Welcome to {Bun.env.PLATFORM_NAME}, {name}!</Heading>
             <Text style={styles.text}>
               We're excited to have you on board. You are one step left to getting amazing listings from our platform. 
             </Text>

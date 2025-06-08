@@ -24,7 +24,7 @@ export const WithdrawalEmail = ({ name, amount }: SignInData) => {
             <Text style={styles.text}>
               If you have any questions, feel free to reach out to our support team. We're here to help!
             </Text>
-            <Text style={styles.footer}>Cheers, <br /> The Huttspot Team</Text>
+            <Text style={styles.footer}>Cheers, <br /> The  {Bun.env.PLATFORM_NAME} Team</Text>
           </Container>
         </Body>
       </Html>

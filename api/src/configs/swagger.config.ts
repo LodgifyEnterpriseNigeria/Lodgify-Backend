@@ -2,14 +2,16 @@ const swaggerConfig = {
     path: "/apis",
     documentation: {
         info: {
-            title: 'Razor Admin Documentation',
+            title: 'Lodgify Admin Documentation',
             version: '1.0.1'
         },
         tags: [
-            { name: 'Auth Session', description: 'Authentication endpoints, and auth stauts retreival' },
-            { name: 'User', description: 'Endpoint for user action' },
-            { name: 'Admin', description: 'Endpoint for admin action' },
-            { name: 'Notifications', description: 'Endpoint for notifications a verifyed auth is required' },
+            { name: 'Auth Session', description: 'Endpoints for authentication and session status retrieval.' },
+            { name: 'User', description: 'Endpoints for user-related actions.' },
+            { name: 'Admin', description: 'Endpoints for admin-related actions.' },
+            { name: 'Notifications', description: 'Endpoints for notifications. Requires verified authentication.' },
+            { name: 'Referral', description: 'Endpoints for referral actions and management.' },
+            { name: 'Task', description: 'Endpoints for task actions and management.' },
         ]
     }
 }

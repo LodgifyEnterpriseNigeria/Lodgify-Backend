@@ -4,12 +4,15 @@ import { SessionClient } from "../../auth/_model";
 import { User } from "../_model";
 import SuccessHandler from "../../../services/successHandler.service";
 import { UserValidator } from "../_setup";
+import Referral from "../../referral/_model";
+import { NotifyUser } from "../../notification/_model";
+import NotificationHandler from "../../../services/notificationHandler.service";
 
 const registerUser = new Elysia()
     .post("/register", async ({ set, body, query }) => {
 
         const validRoles = ["user", "agent"]
-        const { email, password, fullName, phoneNumber, dateOfBirth, username, gender, profile } = body;
+        const { email, password, fullName, phoneNumber, dateOfBirth, username, gender, profile, referalToken } = body;
         const { role } = query
         try {
             if (!role || !validRoles.includes(role)) {
@@ -25,7 +28,7 @@ const registerUser = new Elysia()
                 email,
                 password,
                 fullName,
-                role: [role],
+                role: role.includes("user") ? [role] : validRoles,
                 profile
             })
 
@@ -45,8 +48,34 @@ const registerUser = new Elysia()
                 gender
             })
 
+
+            const getReferie = await Referral.findOne(
+                { token: referalToken }
+            )
+
+            if (!getReferie && referalToken !== "") {
+                await SessionClient.findByIdAndDelete(newClient._id)
+                return ErrorHandler.ValidationError(set, "Invalid referral token provided");
+            }
+
+            const ref = await Referral.create({
+                userId: newUser._id,
+                referedBy: getReferie?.userId
+            })
+
+            const refInfo = await ref.populate("referedBy")
+
+            NotificationHandler.send(
+                newClient._id,
+                "notRead",
+                "We are glad to have you with us, let's get you your next property.",
+                `Hey ${newClient.fullName}, welcome to Lodgify`,
+            )
+
+
             if (!newUser) {
                 await SessionClient.findByIdAndDelete(newClient._id)
+                await Referral.findByIdAndDelete(ref._id)
                 return ErrorHandler.ServerError(
                     set,
                     "Error while creating user"
@@ -59,6 +88,7 @@ const registerUser = new Elysia()
                 "User Created",
                 {
                     user: newUser,
+                    referral: refInfo
                 },
                 true
             )
@@ -70,16 +100,5 @@ const registerUser = new Elysia()
             );
         }
     }, UserValidator.create)
-    .post("/register/agent", async ({ set, body }) => {
-        try {
-
-        } catch (error) {
-            return ErrorHandler.ServerError(
-                set,
-                "Error registering agent",
-                error
-            );
-        }
-    })
 
 export default registerUser;

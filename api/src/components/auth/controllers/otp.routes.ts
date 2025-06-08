@@ -12,6 +12,7 @@ const manageOTP = new Elysia()
         body: { sessionId }
     }) => {
         try {
+
             const client = await SessionClient.findOne({
                 _id: sessionId,
                 isEmailVerified: true

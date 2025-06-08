@@ -11,6 +11,7 @@ export const UserValidator = {
             phoneNumber: t.String(),
             gender: t.Enum({ male: 'male', female: 'female', other: 'other' }),
             dateOfBirth: t.String({ format: 'date' }),
+            referalToken: t.String()
         }),
         query: t.Object({
             role: t.Enum({ user: 'user' }, {
