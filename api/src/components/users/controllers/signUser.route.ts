@@ -32,6 +32,11 @@ const signUser = new Elysia()
                 return ErrorHandler.ValidationError(set, "Invalid credentials")
             }
 
+            const user = await User.findOne({ sessionClientId: checkUser._id })
+            if (!user) {
+                return ErrorHandler.ValidationError(set, "Invalid credentials")
+            }
+
             // set cookies
             await AuthHandler.signSession(
                 set,
@@ -44,11 +49,21 @@ const signUser = new Elysia()
                 sessionRefreshJwt
             )
 
-            const user = await User.findOne({ sessionClientId: checkUser._id })
+            
+
+            
             return SuccessHandler(
                 set,
                 "User Signed In",
-                user
+                {
+                    _id: user._id.toString(),
+                    sessionClientId: user.sessionClientId.toString(),
+                    username: user.username,
+                    phoneNumber: user.phoneNumber,
+                    dateOfBirth: user.dateOfBirth?.toISOString(), // Safe optional chaining
+                    gender: user.gender,
+                    __v: user.__v
+                }
             )
         } catch (error) {
             return ErrorHandler.ServerError(

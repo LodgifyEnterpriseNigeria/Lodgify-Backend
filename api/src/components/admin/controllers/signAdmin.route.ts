@@ -32,6 +32,11 @@ const signAdmin = new Elysia()
                 return ErrorHandler.ValidationError(set, "Invalid credentials")
             }
 
+            const admin = await Admin.findOne({ sessionClientId: checkAdmin._id })
+            if (!admin) {
+                return ErrorHandler.ValidationError(set, "Invalid credentials")
+            }
+
             // set cookies
             await AuthHandler.signSession(
                 set,
@@ -44,10 +49,7 @@ const signAdmin = new Elysia()
                 sessionRefreshJwt
             )
 
-            const admin = await Admin.findOne({ sessionClientId: checkAdmin._id })
-            if (!admin) {
-                return ErrorHandler.ValidationError(set, "Admin not found")
-            }
+
 
             return SuccessHandler(
                 set,

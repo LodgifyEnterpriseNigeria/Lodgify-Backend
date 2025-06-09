@@ -71,7 +71,7 @@ class AuthHandler {
                 tokenData: {
                     email: session.email,
                     role: session.role,
-                    sessionId: session._id
+                    sessionId: session._id.toString()
                 }
             };
         } catch (error) {
@@ -95,10 +95,12 @@ class AuthHandler {
         sessionRefreshJwt: { sign: any; verify?: (jwt?: string) => Promise<false | (Record<string, string | number> & JWTPayloadSpec)>; }
     ) {
         try {
+            const plainSession = session.toObject ? session.toObject() : session;
+
             const tokenPayload = {
-                sessionClientId: session._id.toString(),
-                email: session.email,
-                role: session.role
+                sessionClientId: plainSession._id.toString(),
+                email: plainSession.email,
+                role: plainSession.role
             };
 
             const [accessToken, refreshToken] = await Promise.all([

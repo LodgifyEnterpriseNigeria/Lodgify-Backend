@@ -55,10 +55,8 @@ export const UserValidator = {
                     sessionClientId: t.String(),
                     username: t.String(),
                     phoneNumber: t.String(),
-                    dateOfBirth: t.String({ format: 'date-time' }),
+                    dateOfBirth: t.String(),
                     gender: t.Enum({ male: 'male', female: 'female', other: 'other' }),
-                    createdAt: t.String({ format: 'date-time' }),
-                    updatedAt: t.String({ format: 'date-time' }),
                     __v: t.Number()
                 })
             })
@@ -70,35 +68,33 @@ export const UserValidator = {
     authStatus: {
         response: t.Optional(
             t.Object({
-            success: t.Boolean(),
-            message: t.String(),
-            data: t.Object({
-                isAuthenticated: t.Boolean(),
-                session: t.Object({
-                _id: t.String(),
-                email: t.String({ format: 'email' }),
-                profile: t.String(),
-                fullName: t.String(),
-                role: t.Array(t.String()),
-                sessions: t.Array(t.String()),
-                isSocialAuth: t.Boolean(),
-                isEmailVerified: t.Boolean(),
-                createdAt: t.String({ format: 'date-time' }),
-                updatedAt: t.String({ format: 'date-time' }),
-                __v: t.Number()
-                }),
-                user: t.Object({
-                _id: t.String(),
-                sessionClientId: t.String(),
-                username: t.String(),
-                phoneNumber: t.String(),
-                dateOfBirth: t.String({ format: 'date-time' }),
-                gender: t.Enum({ male: 'male', female: 'female', other: 'other' }),
-                createdAt: t.String({ format: 'date-time' }),
-                updatedAt: t.String({ format: 'date-time' }),
-                __v: t.Number()
+                success: t.Boolean(),
+                message: t.String(),
+                data: t.Object({
+                    isAuthenticated: t.Boolean(),
+                    session: t.Object({
+                        _id: t.String(),
+                        email: t.String({ format: 'email' }),
+                        profile: t.String(),
+                        fullName: t.String(),
+                        role: t.Array(t.String()),
+                        sessions: t.Array(t.String()),
+                        isSocialAuth: t.Boolean(),
+                        isEmailVerified: t.Boolean(),
+                        createdAt: t.String({ format: 'date-time' }),
+                        updatedAt: t.String({ format: 'date-time' }),
+                        __v: t.Number()
+                    }),
+                    user: t.Object({
+                        _id: t.String(),
+                        sessionClientId: t.String(),
+                        username: t.String(),
+                        phoneNumber: t.String(),
+                        dateOfBirth: t.String({ format: 'date-time' }),
+                        gender: t.Enum({ male: 'male', female: 'female', other: 'other' }),
+                        __v: t.Number()
+                    })
                 })
-            })
             })
         ),
         detail: {

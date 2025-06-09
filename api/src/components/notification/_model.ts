@@ -5,6 +5,7 @@ interface INotifyUser {
     type: string;
     title: string;
     message: string;
+    createdAt?: Date;
 }
 
 interface INotifyAdmin {
@@ -30,6 +31,8 @@ const NotifyUserSchema = new Schema<INotifyUser>({
     }
 }, { timestamps: true })
 
+NotifyUserSchema.index({ createdAt: 1 }, { expireAfterSeconds: 60 * 60 * 24 * 30 });
+
 const NotifyAdminSchema = new Schema<INotifyAdmin>({
     type: {
         type: String,
@@ -41,6 +44,9 @@ const NotifyAdminSchema = new Schema<INotifyAdmin>({
         type: String,
     }
 }, { timestamps: true })
+
+NotifyAdminSchema.index({ createdAt: 1 }, { expireAfterSeconds: 60 * 60 * 24 * 30 });
+
 
 export const NotifyUser = model<INotifyUser>('NotificationUser', NotifyUserSchema)
 export const NotifyAdmin = model<INotifyAdmin>('NotificationAdmin,', NotifyAdminSchema)
