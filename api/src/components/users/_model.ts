@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema<IUser>({
     },
     gender: {
         type: String,
-        enum: ["male", "female", "other"],
+        enum: ["male", "female", "other", "notSpecified"],
         required: true,
     },
     address: {

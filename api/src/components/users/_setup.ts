@@ -65,6 +65,11 @@ export const UserValidator = {
             tags: ['User']
         }
     },
+    oauth: {
+        detail: {
+            tags: ['User']
+        }
+    },
     authStatus: {
         response: t.Optional(
             t.Object({

@@ -7,6 +7,7 @@ import { UserValidator } from "../_setup";
 import Referral from "../../referral/_model";
 import { NotifyUser } from "../../notification/_model";
 import NotificationHandler from "../../../services/notificationHandler.service";
+import { rewardReferralChain } from "../../../services/referalToken.service";
 
 const registerUser = new Elysia()
     .post("/register", async ({ set, body, query }) => {
@@ -63,14 +64,18 @@ const registerUser = new Elysia()
                 referedBy: getReferie?.userId
             })
 
-            const refInfo = await ref.populate("referedBy")
+            // Optional: reward 2nd-level referrer
+            if (getReferie?.userId) {
+                await rewardReferralChain(getReferie.userId);
+            }
 
+            const refInfo = await ref.populate("referedBy")
             NotificationHandler.send(
                 newClient._id,
                 "notRead",
-                "We are glad to have you with us, let's get you your next property.",
-                `Hey ${newClient.fullName}, welcome to Lodgify`,
-            )
+                `Hey ${newClient.fullName}, you're all set! Let's get you your next property.`,
+                "Welcome to Lodgify! 🎉",
+            );
 
 
             if (!newUser) {

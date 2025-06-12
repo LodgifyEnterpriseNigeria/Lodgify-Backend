@@ -42,15 +42,13 @@ ReferralSchema.pre<IReferral>('save', async function (next) {
 ReferralSchema.post('save', async function (doc, next) {
     try {
         if (doc.referedBy) {
-            // Find the referral doc of the person who referred this user
-            const referringReferral = await mongoose.models.Referral.findOne({ userId: doc.referedBy }).populate("userId");
+            // Step 1: Immediate Referrer (Level 1)
+            const referringReferral = await mongoose.models.Referral.findOne({ userId: doc.referedBy });
 
             if (referringReferral) {
-                // Check if current user is already in the friends array
                 const alreadyFriend: boolean = referringReferral.friends.some((friendId: mongoose.Types.ObjectId) =>
                     friendId.toString() === doc._id.toString()
                 );
-
 
                 const userContent = await doc.populate('userId');
 
@@ -59,20 +57,23 @@ ReferralSchema.post('save', async function (doc, next) {
                         referringReferral.userId.sessionClientId,
                         "notRead",
                         `Your friend ${(userContent.userId as any).username} has joined using your referral!`,
-                        "New Friend Joined",
-                    )
+                        "New Friend Joined"
+                    );
+
                     referringReferral.friends.push(doc._id);
-                    referringReferral.points = (referringReferral.points || 0) + 1000;
+                    referringReferral.points = (referringReferral.points || 0) + 20000;
                     await referringReferral.save();
                 }
             }
         }
+
         next();
     } catch (err) {
-        console.error('Error updating referral friends:', err);
+        console.error("Error in referral post-save logic:", err);
         next();
     }
 });
+
 
 const Referral = mongoose.model<IReferral>('Referral', ReferralSchema);
 

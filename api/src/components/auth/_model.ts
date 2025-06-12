@@ -1,6 +1,6 @@
 import mongoose, { Schema, Types } from 'mongoose';
 
-export const roles =  ['student', 'hottspoter', 'host', 'admin']
+export const roles = ['student', 'hottspoter', 'host', 'admin']
 
 // session client
 export interface ISessionClient extends Document {
@@ -13,6 +13,11 @@ export interface ISessionClient extends Document {
     isSocialAuth: boolean;
     isEmailVerified: boolean;
     comparePassword(inputPassword: string): Promise<boolean>;
+    oAuth: {
+        google: {
+            googleId: string,
+        }
+    }
 }
 
 export interface ISession extends Document {
@@ -51,13 +56,18 @@ const OTPSchema = new mongoose.Schema<IOTP>({
     },
     purpose: {
         type: String,
-        enum: ["email_verification" , "2fa"]
+        enum: ["email_verification", "2fa"]
     }
-}, {timestamps: true})
-OTPSchema.index({expiresAt: 1}, { expireAfterSeconds: 0 }) // Automatically remove OTP after 5 minutes
+}, { timestamps: true })
+OTPSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 }) // Automatically remove OTP after 5 minutes
 
 
 const sessionClientSchema = new mongoose.Schema<ISessionClient>({
+    oAuth:{
+        google: {
+            googleId: { type: String, unique: true, sparse: true },
+        }
+    },
     email: {
         type: String,
         required: true,
@@ -72,17 +82,15 @@ const sessionClientSchema = new mongoose.Schema<ISessionClient>({
     },
     password: {
         type: String,
-        required: true,
     },
     role: [{
         type: String,
-        default: 'student',
     }],
     sessions: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Session', 
+        ref: 'Session',
     }],
-    isSocialAuth:{
+    isSocialAuth: {
         type: Boolean,
         default: false,
     },
