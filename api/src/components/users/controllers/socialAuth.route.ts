@@ -2,7 +2,7 @@ import Elysia from "elysia";
 import ErrorHandler from "../../../services/errorHandler.service";
 import SuccessHandler from "../../../services/successHandler.service";
 import OAuthHandler from "../../../services/oAuthHandler.service";
-import { getGoogleTokens, getGoogleUser } from "../../../configs/oAuth.config";
+import { googleOAuth } from "../../../configs/oAuth.config";
 import { SessionClient } from "../../auth/_model";
 import { User } from "../_model";
 import Referral from "../../referral/_model";
@@ -15,14 +15,12 @@ import { UserValidator } from "../_setup";
 const socialAuth = new Elysia()
     .use(jwtSessionAccess)
     .use(jwtSessionRefresh)
-    .get("/oauth/:type", async ({ set, params }) => {
+    .get("/oauth/:type", async ({ set, params: { type } }) => {
         try {
-            if (params.type === "google") {
-                const oAuth = await OAuthHandler.linkGoogle();
-                return SuccessHandler(set, "Redirect to Google", { oAuth });
-            }
+            const data = await OAuthHandler.getRedirect(type)
 
-            return ErrorHandler.ValidationError(set, "Unsupported OAuth provider");
+            return SuccessHandler(set, data.message, data.oAuth)
+
         } catch (error) {
             return ErrorHandler.ServerError(
                 set,
@@ -31,6 +29,9 @@ const socialAuth = new Elysia()
             )
         }
     }, UserValidator.oauth)
+    .get("/oauth/instagram/callback", async ({ }) => {
+        
+    })
     .get("/oauth/google/callback", async ({
         cookie: { sessionAccess, sessionRefresh },
         request,
@@ -42,8 +43,8 @@ const socialAuth = new Elysia()
     }) => {
         try {
             const code = query.code as string;
-            const { access_token } = await getGoogleTokens(code);
-            const googleUser = await getGoogleUser(access_token);
+            const { access_token } = await googleOAuth.getTokens(code);
+            const googleUser = await googleOAuth.getUser(access_token);
 
             const { id: googleId, email, picture, name } = googleUser;
 

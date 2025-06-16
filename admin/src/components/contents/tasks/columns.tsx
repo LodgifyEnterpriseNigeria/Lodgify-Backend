@@ -1,22 +1,19 @@
-import { ArrowUpDown, CheckCircle2, MoreHorizontal, XCircle } from "lucide-react";
-import { format } from "date-fns";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger, DropdownMenu } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Badge } from "@/components/ui/badge";
 
 export type User = {
+    fullName: string;
     username: string;
     verified: boolean;
+    refCount: number;
+    email: string;
     phoneNumber: string;
     dateOfBirth: string;
-    sessionClientId: {
-        email: string;
-        fullName: string;
-    }
 }
 
-export const userColumns = [
+export const taskColumns = [
     {
         id: "select",
         header: ({ table }) => (
@@ -45,11 +42,11 @@ export const userColumns = [
                 variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
             >
-                Full Name
+                Email
                 <ArrowUpDown className="ml-2 h-4 w-4" />
             </Button>
         ),
-        accessorKey: 'sessionClientId.fullName',
+        accessorKey: 'fullName',
         cell: ({ getValue }: { getValue: any }) => (
             <div className="px-4 py-2">
                 {getValue()}
@@ -70,28 +67,30 @@ export const userColumns = [
         ),
     },
     {
-        accessorFn: (row: any) => row.sessionClientId?.isEmailVerified,
-        header: "Verified",
-        cell: ({ row }) => {
-            const isVerified = row.original.sessionClientId?.isEmailVerified;
-
-            return (
-                <Badge
-                    variant="outline"
-                    className={`px-2 gap-1 items-center ${isVerified
-                            ? "text-green-600 border-green-300 dark:text-green-400"
-                            : "text-red-600 border-red-300 dark:text-red-400"
-                        }`}
-                >
-                    {isVerified ? (
-                        <CheckCircle2 className="w-4 h-4" />
-                    ) : (
-                        <XCircle className="w-4 h-4" />
-                    )}
-                    {isVerified ? "Yes" : "No"}
-                </Badge>
-            );
-        },
+        header: () => (
+            <div className="px-4 py-2">
+                Verified
+            </div>
+        ),
+        accessorKey: 'verified',
+        cell: ({ getValue }: { getValue: any }) => (
+            <div className="px-4 py-2">
+                {getValue() ? 'Yes' : 'No'}
+            </div>
+        ),
+    },
+    {
+        header: () => (
+            <div className="px-4 py-2">
+                Ref Count
+            </div>
+        ),
+        accessorKey: 'refCount',
+        cell: ({ getValue }: { getValue: any }) => (
+            <div className="px-4 py-2">
+                {getValue()}
+            </div>
+        ),
     },
     {
         header: () => (
@@ -99,7 +98,7 @@ export const userColumns = [
                 Email
             </div>
         ),
-        accessorKey: 'sessionClientId.email',
+        accessorKey: 'email',
         cell: ({ getValue }: { getValue: any }) => (
             <div className="px-4 py-2">
                 {getValue()}
@@ -126,21 +125,11 @@ export const userColumns = [
             </div>
         ),
         accessorKey: 'dateOfBirth',
-        cell: ({ getValue }: { getValue: () => string | Date }) => {
-            const rawValue = getValue();
-            const date = new Date(rawValue);
-
-            let formatted = 'Invalid date';
-            if (!isNaN(date.getTime())) {
-                formatted = format(date, "dd MMM yyyy"); // e.g., "16 Jun 2025"
-            }
-
-            return (
-                <div className="px-4 py-2">
-                    {formatted}
-                </div>
-            );
-        },
+        cell: ({ getValue }: { getValue: any }) => (
+            <div className="px-4 py-2">
+                {getValue()}
+            </div>
+        ),
     },
     {
         id: "actions",

@@ -13,6 +13,7 @@ import {
     IconReport,
     IconSearch,
     IconSettings,
+    IconTicket,
     IconUsers,
 } from "@tabler/icons-react"
 
@@ -47,6 +48,11 @@ const data = {
             title: "Tasks",
             url: "/tasks",
             icon: IconChartBar,
+        },
+        {
+            title: "Refferals",
+            url: "/referral",
+            icon: IconTicket,
         },
     ],
     navClouds: [
@@ -135,7 +141,7 @@ const data = {
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return (
-        <Sidebar collapsible="offcanvas" {...props}>
+        <Sidebar collapsible="icon" {...props}>
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
@@ -159,7 +165,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarContent>
                 <NavMain items={data.navMain} />
                 {/* <NavDocuments items={data.documents} /> */}
-                <NavSecondary items={data.navSecondary} className="mt-auto" />
+                <NavSecondary comand={data.navMain} items={data.navSecondary} className="mt-auto" />
             </SidebarContent>
             <SidebarFooter>
                 <NavUser />

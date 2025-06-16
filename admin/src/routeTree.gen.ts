@@ -17,6 +17,7 @@ import { Route as AuthRegisterAdminImport } from './routes/auth/registerAdmin'
 import { Route as AdminUsersImport } from './routes/_admin/users'
 import { Route as AdminTasksImport } from './routes/_admin/tasks'
 import { Route as AdminSettingsImport } from './routes/_admin/settings'
+import { Route as AdminReferralImport } from './routes/_admin/referral'
 import { Route as AdminOverviewImport } from './routes/_admin/overview'
 import { Route as AdminSettingsIndexImport } from './routes/_admin/settings/index'
 import { Route as AdminAccountIndexImport } from './routes/_admin/account/index'
@@ -58,6 +59,12 @@ const AdminTasksRoute = AdminTasksImport.update({
 const AdminSettingsRoute = AdminSettingsImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminReferralRoute = AdminReferralImport.update({
+  id: '/referral',
+  path: '/referral',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -122,6 +129,13 @@ declare module '@tanstack/react-router' {
       path: '/overview'
       fullPath: '/overview'
       preLoaderRoute: typeof AdminOverviewImport
+      parentRoute: typeof AdminImport
+    }
+    '/_admin/referral': {
+      id: '/_admin/referral'
+      path: '/referral'
+      fullPath: '/referral'
+      preLoaderRoute: typeof AdminReferralImport
       parentRoute: typeof AdminImport
     }
     '/_admin/settings': {
@@ -212,6 +226,7 @@ const AdminSettingsRouteWithChildren = AdminSettingsRoute._addFileChildren(
 
 interface AdminRouteChildren {
   AdminOverviewRoute: typeof AdminOverviewRoute
+  AdminReferralRoute: typeof AdminReferralRoute
   AdminSettingsRoute: typeof AdminSettingsRouteWithChildren
   AdminTasksRoute: typeof AdminTasksRoute
   AdminUsersRoute: typeof AdminUsersRoute
@@ -220,6 +235,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminOverviewRoute: AdminOverviewRoute,
+  AdminReferralRoute: AdminReferralRoute,
   AdminSettingsRoute: AdminSettingsRouteWithChildren,
   AdminTasksRoute: AdminTasksRoute,
   AdminUsersRoute: AdminUsersRoute,
@@ -232,6 +248,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '': typeof AdminRouteWithChildren
   '/overview': typeof AdminOverviewRoute
+  '/referral': typeof AdminReferralRoute
   '/settings': typeof AdminSettingsRouteWithChildren
   '/tasks': typeof AdminTasksRoute
   '/users': typeof AdminUsersRoute
@@ -247,6 +264,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '': typeof AdminRouteWithChildren
   '/overview': typeof AdminOverviewRoute
+  '/referral': typeof AdminReferralRoute
   '/tasks': typeof AdminTasksRoute
   '/users': typeof AdminUsersRoute
   '/auth/registerAdmin': typeof AuthRegisterAdminRoute
@@ -262,6 +280,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_admin': typeof AdminRouteWithChildren
   '/_admin/overview': typeof AdminOverviewRoute
+  '/_admin/referral': typeof AdminReferralRoute
   '/_admin/settings': typeof AdminSettingsRouteWithChildren
   '/_admin/tasks': typeof AdminTasksRoute
   '/_admin/users': typeof AdminUsersRoute
@@ -279,6 +298,7 @@ export interface FileRouteTypes {
     | '/'
     | ''
     | '/overview'
+    | '/referral'
     | '/settings'
     | '/tasks'
     | '/users'
@@ -293,6 +313,7 @@ export interface FileRouteTypes {
     | '/'
     | ''
     | '/overview'
+    | '/referral'
     | '/tasks'
     | '/users'
     | '/auth/registerAdmin'
@@ -306,6 +327,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_admin'
     | '/_admin/overview'
+    | '/_admin/referral'
     | '/_admin/settings'
     | '/_admin/tasks'
     | '/_admin/users'
@@ -352,6 +374,7 @@ export const routeTree = rootRoute
       "filePath": "_admin.tsx",
       "children": [
         "/_admin/overview",
+        "/_admin/referral",
         "/_admin/settings",
         "/_admin/tasks",
         "/_admin/users",
@@ -360,6 +383,10 @@ export const routeTree = rootRoute
     },
     "/_admin/overview": {
       "filePath": "_admin/overview.tsx",
+      "parent": "/_admin"
+    },
+    "/_admin/referral": {
+      "filePath": "_admin/referral.tsx",
       "parent": "/_admin"
     },
     "/_admin/settings": {

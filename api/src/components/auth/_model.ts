@@ -1,6 +1,5 @@
 import mongoose, { Schema, Types } from 'mongoose';
 
-export const roles = ['student', 'hottspoter', 'host', 'admin']
 
 // session client
 export interface ISessionClient extends Document {

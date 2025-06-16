@@ -39,7 +39,7 @@ interface DataTableProps<TData, TValue> {
     data: Array<TData>
 }
 
-export default function UserTable<TData, TValue>({
+export default function TaskTable<TData, TValue>({
     columns,
     data,
 }: DataTableProps<TData, TValue>) {

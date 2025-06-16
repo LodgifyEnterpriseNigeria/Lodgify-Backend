@@ -49,6 +49,13 @@ const registerUser = new Elysia()
                 gender
             })
 
+            if (!newUser) {
+                await SessionClient.findByIdAndDelete(newClient._id)
+                return ErrorHandler.ServerError(
+                    set,
+                    "Error while creating user"
+                );
+            }
 
             const getReferie = await Referral.findOne(
                 { token: referalToken }
@@ -56,6 +63,7 @@ const registerUser = new Elysia()
 
             if (!getReferie && referalToken !== "") {
                 await SessionClient.findByIdAndDelete(newClient._id)
+                await User.findByIdAndDelete(newUser._id)
                 return ErrorHandler.ValidationError(set, "Invalid referral token provided");
             }
 
@@ -77,15 +85,6 @@ const registerUser = new Elysia()
                 "Welcome to Lodgify! 🎉",
             );
 
-
-            if (!newUser) {
-                await SessionClient.findByIdAndDelete(newClient._id)
-                await Referral.findByIdAndDelete(ref._id)
-                return ErrorHandler.ServerError(
-                    set,
-                    "Error while creating user"
-                );
-            }
 
 
             return SuccessHandler(

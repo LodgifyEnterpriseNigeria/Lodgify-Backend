@@ -2,7 +2,7 @@ import Elysia from "elysia";
 import getTokenInfo from "./controllers/getTokenInfo.route";
 
 const referalPlugin = new Elysia({
-    prefix: "/referal"
+    prefix: "/referral"
 })
     .use(getTokenInfo)
 

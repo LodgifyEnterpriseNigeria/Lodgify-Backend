@@ -1,0 +1,12 @@
+1. Admin creates task → saved in Task collection.
+
+2. User clicks "Start Task"
+   → Create an ActiveTask doc with:
+      - status = "pending"
+
+3. User clicks "Done"
+   → If verifyBy === 'bot': trigger script, update status
+   → If verifyBy === 'admin': queue for manual review
+
+4. Upon verification:
+   → Update status to "completed" or leave as "pending" with message.

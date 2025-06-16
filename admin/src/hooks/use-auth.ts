@@ -7,10 +7,10 @@ export const useAuth = () => {
     async function adminLogin(payload: { email: string; password: string }) {
         try {
             const data = await login(payload);
-            toast("Login Successful")
+            toast.success("Login Successful")
             return data.data;
         } catch (error) {
-            toast("Login Error", {
+            toast.error("Login Error", {
                 description: (error as any).response?.data?.message || (error as any).response?.data || (error as any).message,
             })
             console.log(error);
@@ -20,11 +20,11 @@ export const useAuth = () => {
     async function adminRegister(payload: { fullName: string; email: string; password: string, role: string }) {
         try {
             const data = await register(payload);
-            toast("Registration Successful")
+            toast.success("Registration Successful")
             // location.href = "/"
             return data.data;
         } catch (error) {
-            toast("Admin Creation Error", {
+            toast.error("Admin Creation Error", {
                 description: (error as any).response?.data?.message || (error as any).response?.data || (error as any).message,
             })
             console.log(error);
@@ -52,11 +52,11 @@ export const useAuth = () => {
     async function logout() {
         try {
             await logoutAdmin();
-            toast("Admin logged out successfully")
+            toast.success("Admin logged out successfully")
 
             return true;
         } catch (error) {
-            toast("Error loging out admni", {
+            toast.error("Error loging out admni", {
                 description: (error as any).response?.data?.message || (error as any).response?.data || (error as any).message,
             })
             console.log(error);

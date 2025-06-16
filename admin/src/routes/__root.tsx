@@ -16,7 +16,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     <>
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <QueryClientProvider client={queryClient}>
-          <Toaster />
+          <Toaster richColors  />
           <Outlet />
         </QueryClientProvider>
       </ThemeProvider>
