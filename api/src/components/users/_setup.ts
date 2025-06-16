@@ -106,5 +106,11 @@ export const UserValidator = {
             tags: ['User'],
             description: "Get user info once the user is signed in"
         }
+    },
+    getUser: {
+        detail: {
+            tags: ['Admin'],
+            description: 'Fetches all single users full profile.'
+        }
     }
 }

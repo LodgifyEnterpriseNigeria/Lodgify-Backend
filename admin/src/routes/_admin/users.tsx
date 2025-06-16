@@ -21,7 +21,7 @@ function RouteComponent() {
 
     const header = (
         <Header title="User Analytics" subText="Manage and analyze user data">
-            <Button>Create User</Button>
+            {/* <Button>Create User</Button> */}
         </Header>
     );
 

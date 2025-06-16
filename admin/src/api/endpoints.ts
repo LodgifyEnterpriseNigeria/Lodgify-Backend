@@ -5,8 +5,15 @@ import api from "@/utils/configs/axios.config";
 
 class Endpoint {
     // Users Endpoints
-    public static async getUsers(){
+    public static async getUsers() {
         const response = await api.get('/users/admin/getUsers');
+        console.log(response.data)
+        return response.data;
+    }
+
+    // Referral Endpoints
+    public static async getReferrals() {
+        const response = await api.get('/referral/admin/getReferrals')
         console.log(response.data)
         return response.data;
     }

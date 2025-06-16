@@ -4,6 +4,7 @@ import ErrorHandler from "../../../services/errorHandler.service";
 import SuccessHandler from "../../../services/successHandler.service";
 import { SessionClient } from "../../auth/_model";
 import { User } from "../_model";
+import { UserValidator } from "../_setup";
 
 const adminHandleUsers = new Elysia({
     prefix: "/admin"
@@ -96,6 +97,6 @@ const adminHandleUsers = new Elysia({
                 error
             );
         }
-    });
+    }, UserValidator.getUser);
 
 export default adminHandleUsers

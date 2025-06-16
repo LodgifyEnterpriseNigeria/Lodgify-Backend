@@ -1,9 +1,13 @@
 import { ArrowUpDown, CheckCircle2, MoreHorizontal, XCircle } from "lucide-react";
 import { format } from "date-fns";
+import { DialogTitle } from "@radix-ui/react-dialog";
+import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 
 export type User = {
     username: string;
@@ -14,6 +18,99 @@ export type User = {
         email: string;
         fullName: string;
     }
+}
+
+const UserActionsColumn = {
+    id: "actions",
+    cell: ({ row }) => {
+        const user = row.original
+        const [open, setOpen] = useState(false)
+
+        return (
+            <>
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                            <span className="sr-only">Open menu</span>
+                            <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem
+                            onClick={() =>
+                                navigator.clipboard.writeText(user.sessionClientId?.email || "")
+                            }
+                        >
+                            Copy customer email
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem onClick={() => setOpen(true)}>
+                            View customer
+                        </DropdownMenuItem>
+                    </DropdownMenuContent>
+                </DropdownMenu>
+
+                {/* Customer Info Dialog */}
+                <Dialog open={open} onOpenChange={setOpen}>
+                    <DialogContent className="max-w-md sm:max-w-lg">
+                        <DialogHeader>
+                            <DialogTitle>Customer Information</DialogTitle>
+                        </DialogHeader>
+
+                        <div className="flex items-center gap-4 mt-4">
+                            <Avatar  className="w-16 h-16 rounded-full ring-2 ring-muted shadow-sm overflow-hidden">
+                                <AvatarImage src={user.sessionClientId.profile} alt={user.sessionClientId.fullName} />
+                                <AvatarFallback className="flex items-center justify-center w-full h-full bg-muted text-muted-foreground font-medium text-lg">
+                                    {user.sessionClientId.fullName
+                                        ?.split(" ")
+                                        .map((n) => n[0])
+                                        .join("")
+                                        .slice(0, 2)
+                                        .toUpperCase()}
+                                </AvatarFallback>
+                            </Avatar>
+                            <div>
+                                <h2 className="text-lg font-semibold">{user.fullName}</h2>
+                                <p className="text-sm text-muted-foreground">{user.sessionClientId?.email}</p>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6 text-sm">
+                            <div>
+                                <span className="font-medium text-muted-foreground">Full Name</span>
+                                <p>{user.sessionClientId.fullName}</p>
+                            </div>
+                            <div>
+                                <span className="font-medium text-muted-foreground">Username</span>
+                                <p>{user.username}</p>
+                            </div>
+                            <div>
+                                <span className="font-medium text-muted-foreground">Phone</span>
+                                <p>{user.phoneNumber}</p>
+                            </div>
+                            <div>
+                                <span className="font-medium text-muted-foreground">DOB</span>
+                                <p>{new Date(user.dateOfBirth).toLocaleDateString()}</p>
+                            </div>
+                            <div>
+                                <span className="font-medium text-muted-foreground">Gender</span>
+                                <p className="capitalize">{user.gender || "N/A"}</p>
+                            </div>
+                            <div>
+                                <span className="font-medium text-muted-foreground">Verified</span>
+                                <p>{user.sessionClientId?.isEmailVerified ? "Yes ✅" : "No ❌"}</p>
+                            </div>
+                            <div className="col-span-full">
+                                <span className="font-medium text-muted-foreground">Joinded On</span>
+                                <p>{new Date(user.createdAt).toLocaleString()}</p>
+                            </div>
+                        </div>
+                    </DialogContent>
+                </Dialog>
+            </>
+        )
+    },
 }
 
 export const userColumns = [
@@ -40,6 +137,7 @@ export const userColumns = [
         enableHiding: false,
     },
     {
+        id: "fullname",
         header: ({ column }: { column: any }) => (
             <Button
                 variant="ghost"
@@ -79,8 +177,8 @@ export const userColumns = [
                 <Badge
                     variant="outline"
                     className={`px-2 gap-1 items-center ${isVerified
-                            ? "text-green-600 border-green-300 dark:text-green-400"
-                            : "text-red-600 border-red-300 dark:text-red-400"
+                        ? "text-green-600 border-green-300 dark:text-green-400"
+                        : "text-red-600 border-red-300 dark:text-red-400"
                         }`}
                 >
                     {isVerified ? (
@@ -94,6 +192,7 @@ export const userColumns = [
         },
     },
     {
+        id: "email",
         header: () => (
             <div className="px-4 py-2">
                 Email
@@ -142,32 +241,7 @@ export const userColumns = [
             );
         },
     },
-    {
-        id: "actions",
-        cell: ({ row }) => {
-            const payment = row.original
-
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem
-                            onClick={() => navigator.clipboard.writeText(payment.id)}
-                        >
-                            Copy payment ID
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>View customer</DropdownMenuItem>
-                        <DropdownMenuItem>View payment details</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            )
-        },
-    },
+    UserActionsColumn
 ]
+
+
