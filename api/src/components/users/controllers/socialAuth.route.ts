@@ -2,8 +2,8 @@ import Elysia from "elysia";
 import ErrorHandler from "../../../services/errorHandler.service";
 import SuccessHandler from "../../../services/successHandler.service";
 import OAuthHandler from "../../../services/oAuthHandler.service";
-import { googleOAuth } from "../../../configs/oAuth.config";
-import { SessionClient } from "../../auth/_model";
+import { googleOAuth, twitterOAuth } from "../../../configs/oAuth.config";
+import { SessionClient, TwitterOAuthSession } from "../../auth/_model";
 import { User } from "../_model";
 import Referral from "../../referral/_model";
 import NotificationHandler from "../../../services/notificationHandler.service";
@@ -11,27 +11,30 @@ import { isSessionAuth } from "../../../middleware/authSession.middleware";
 import AuthHandler from "../../../services/authHandler.service";
 import { jwtSessionAccess, jwtSessionRefresh } from "../../../middleware/jwt.middleware";
 import { UserValidator } from "../_setup";
+import axios from "axios";
 
 const socialAuth = new Elysia()
     .use(jwtSessionAccess)
     .use(jwtSessionRefresh)
-    .get("/oauth/:type", async ({ set, params: { type } }) => {
+    .get("/oauth/:type", async ({ set, params: { type }, query }) => {
         try {
-            const data = await OAuthHandler.getRedirect(type)
+            let data;
+            if (type === "google") {
+                data = await OAuthHandler.getRedirect({ type });
+            } else {
+                return ErrorHandler.ValidationError(set, "Invalid OAuth type");
+            }
 
-            return SuccessHandler(set, data.message, data.oAuth)
+            return SuccessHandler(set, data.message, data.oAuth);
 
         } catch (error) {
             return ErrorHandler.ServerError(
                 set,
                 "Error during oAuth process",
                 error
-            )
+            );
         }
     }, UserValidator.oauth)
-    .get("/oauth/instagram/callback", async ({ }) => {
-        
-    })
     .get("/oauth/google/callback", async ({
         cookie: { sessionAccess, sessionRefresh },
         request,
@@ -141,6 +144,7 @@ const socialAuth = new Elysia()
             )
         }
     }, UserValidator.oauth)
+
     .use(isSessionAuth("user"))
     .delete("/oauth/google/unlink", async ({ set, sessionClient }) => {
         try {

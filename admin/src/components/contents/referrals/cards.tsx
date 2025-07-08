@@ -60,7 +60,7 @@ export function ReferealCards({ data }: Props) {
             <Badge variant="outline">
               <IconTrendingUp className="text-green-600" />
               {/* Optional static increase */}
-              +8.3%
+              +{activeAgents/100}%
             </Badge>
           </CardAction>
         </CardHeader>

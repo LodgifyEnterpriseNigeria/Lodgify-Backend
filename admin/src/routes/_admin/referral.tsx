@@ -1,19 +1,21 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
+import { format } from 'date-fns'
+import { LucideUser } from 'lucide-react'
 import Header from '@/components/blocks/header'
 import { ReferealCards } from '@/components/contents/referrals/cards'
 import RefTable from '@/components/contents/referrals/dataTable'
 import { refColumns } from '@/components/contents/referrals/columns'
 import Endpoint from '@/api/endpoints'
-import { useQuery } from '@tanstack/react-query'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
-import { useState } from 'react'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { format } from 'date-fns'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { LucideUser } from 'lucide-react'
+import { DialogDescription } from '@/components/ui/dialog'
+import { DialogTitle } from '@radix-ui/react-dialog'
 
 export const Route = createFileRoute('/_admin/referral')({
 	component: RouteComponent,
@@ -59,7 +61,7 @@ function RouteComponent() {
 		referrals,
 		totalReferralsMade,
 		activeAgents,
-		topReferrers,
+		averageReferralRate
 	} = data.data
 
 	return (
@@ -71,7 +73,7 @@ function RouteComponent() {
 						data={{
 							totalReferralsMade,
 							activeAgents,
-							trendingChange: 2.5,
+							trendingChange: averageReferralRate,
 						}}
 					/>
 					<RefTable data={referrals} columns={refColumns(setSelectedReferrer)} />
@@ -91,10 +93,12 @@ export default function ReferrerPanel({ data }: { data: any }) {
 	const user = data.userId
 	const session = user?.sessionClientId || {}
 
+	console.log("Referrer Data:", data)
+
 
 	return (
-		<div className="p-4 space-y-6">
-			<h2 className="text-xl font-semibold">Referrer Details</h2>
+		<div className="p-4 space-y-2 overflow-y-scroll no-scrollbar">
+			<DialogTitle className="text-xl font-semibold">Referrer Details</DialogTitle>
 
 			<Card className=" p-0 shadow-md border-none md:max-w-md w-full">
 				<CardContent className="space-y-6 py-6">
@@ -144,6 +148,7 @@ export default function ReferrerPanel({ data }: { data: any }) {
 			</Card>
 
 			<Separator />
+
 			<Card className="p-0 shadow-md border-none md:max-w-md w-full">
 				<CardContent className="space-y-6 py-6">
 
@@ -178,6 +183,44 @@ export default function ReferrerPanel({ data }: { data: any }) {
 
 			</Card>
 
+
+			<Card className="p-0 shadow-md border-none md:max-w-md w-full">
+				<CardContent className="space-y-6 py-6">
+					<div>
+						<h3 className="text-sm font-semibold opacity-30 mb-4">Referred Friends</h3>
+						{data.friends.length === 0 ? (
+							<p className="text-muted-foreground text-sm">No referred users yet.</p>
+						) : (
+							<div className="space-y-4">
+								{data.friends.map((friend: any, index: number) => {
+									const friendUser = friend.userId || {}; // Handle null/undefined
+									return (
+										<div
+											key={index}
+											className="border rounded-lg px-4 py-3 bg-muted/20 flex justify-between items-center"
+										>
+											<div>
+												<p className="font-medium">{friendUser.username || "Unnamed"}</p>
+												<p className="text-sm text-muted-foreground">{friendUser.email}</p>
+											</div>
+											<Badge
+												variant="outline"
+												className={
+													friend.activityStatus
+														? "text-green-600 border-green-300 dark:text-green-400"
+														: "text-red-600 border-red-300 dark:text-red-400"
+												}
+											>
+												{friend.activityStatus ? "Active" : "Inactive"}
+											</Badge>
+										</div>
+									);
+								})}
+							</div>
+						)}
+					</div>
+				</CardContent>
+			</Card>
 		</div>
 	)
 }

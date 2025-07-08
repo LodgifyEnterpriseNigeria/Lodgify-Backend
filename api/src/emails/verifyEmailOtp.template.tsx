@@ -2,7 +2,7 @@ import React from "react";
 import { Html, Head, Body, Container, Section, Text, Heading, Link, render, Img } from '@react-email/components';
 
 
-const host = process.env.ACTIVE_API_ORIGIN
+const host = Bun.env.ACTIVE_API_ORIGIN
 
 interface SignInData {
     name: string;

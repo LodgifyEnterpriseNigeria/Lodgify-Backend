@@ -66,8 +66,40 @@ export const UserValidator = {
         }
     },
     oauth: {
+        params: t.Object({
+            type: t.Enum({ google: "google", instagram: "instagram", x: "x" })
+        }),
+        query: t.Object({
+            xUsername: t.Optional(t.String())
+        }),
+        response: t.Optional(
+            t.Object({
+                success: t.Boolean(),
+                message: t.String(),
+                data: t.Record(t.String(), t.Any()) // Can be more specific if needed
+            })
+        ),
         detail: {
             tags: ['User']
+        }
+    },
+    usernameLinking: {
+        params: t.Object({
+            type: t.Enum({ x: "x" })
+        }),
+        query: t.Object({
+            username: t.String({ minLength: 3, maxLength: 50 })
+        }),
+        response: t.Optional(
+            t.Object({
+                success: t.Boolean(),
+                message: t.String(),
+                data: t.Record(t.String(), t.Any()) // Can be more specific if needed
+            })
+        ),
+        detail: {
+            tags: ['User'],
+            description: 'Link a username to the user account'
         }
     },
     authStatus: {

@@ -10,42 +10,35 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 
-export function TaskCards() {
+type TaskCardMetrics = {
+    ongoingTasks: number;
+    totalCompletedTasks: number;
+    totalTasks: number;
+};
+
+export function TaskCards({ stats }: { stats: TaskCardMetrics }) {
     return (
         <div className="flex flex-wrap gap-4">
             <Card className="@container/card flex-2 min-w-[250px] max-w-full">
                 <CardHeader>
-                    <CardDescription>Total Users</CardDescription>
+                    <CardDescription>Total Task Created</CardDescription>
                     <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                        1500
+                        {stats.totalTasks}
                     </CardTitle>
                 </CardHeader>
                 <CardFooter className="flex-col items-start gap-1.5 text-sm">
                     <div className="line-clamp-1 flex items-center gap-2 font-medium">
-                        Total number of task completed by users <IconSubtask className="size-4" />
+                        Total number of users <IconUser className="size-4" />
                     </div>
                 </CardFooter>
             </Card>
 
-            <Card className="@container/card flex-1 min-w-[250px] max-w-full">
-                <CardHeader>
-                    <CardDescription>Active Tasks</CardDescription>
-                    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                        124
-                    </CardTitle>
-                </CardHeader>
-                <CardFooter className="flex-col items-start gap-1.5 text-sm">
-                    <div className="line-clamp-1 items-center flex gap-2 font-medium">
-                        Task currently on by user <IconUser className="size-4" />
-                    </div>
-                </CardFooter>
-            </Card>
 
             <Card className="@container/card flex-1 min-w-[250px] max-w-full">
                 <CardHeader>
-                    <CardDescription>Task Complete Count</CardDescription>
+                    <CardDescription>Task Completion Count</CardDescription>
                     <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                        304
+                        {stats.totalCompletedTasks}
                     </CardTitle>
                 </CardHeader>
                 <CardFooter className="flex-col items-start gap-1.5 text-sm">
@@ -55,19 +48,19 @@ export function TaskCards() {
                 </CardFooter>
             </Card>
 
-            <Card className="@container/card flex-1 min-w-[250px] max-w-full">
+            {/* <Card className="@container/card flex-1 min-w-[250px] max-w-full">
                 <CardHeader>
-                    <CardDescription>Supended Accounts</CardDescription>
+                    <CardDescription>Suspended Accounts</CardDescription>
                     <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                        0
+                        {stats.suspendedAccounts}
                     </CardTitle>
                 </CardHeader>
                 <CardFooter className="flex-col items-start gap-1.5 text-sm">
                     <div className="line-clamp-1 flex items-center gap-2 font-medium">
-                        Banned from the campaign<IconFlag className="size-4" />
+                        Banned from the campaign <IconFlag className="size-4" />
                     </div>
                 </CardFooter>
-            </Card>
+            </Card> */}
         </div>
-    )
+    );
 }

@@ -75,10 +75,10 @@ export default function RefTable<TData, TValue>({
             {/* above Table */}
             <div className="flex items-center py-4 gap-8">
                 <Input
-                    placeholder="Filter emails..."
-                    value={table.getColumn("email")?.getFilterValue() as string}
+                    placeholder="Filter username..."
+                    value={table.getColumn("username")?.getFilterValue() as string}
                     onChange={(event) =>
-                        table.getColumn("email")?.setFilterValue(event.target.value)
+                        table.getColumn("username")?.setFilterValue(event.target.value)
                     }
                     className="max-w-full sm:max-w-sm flex-1"
                 />

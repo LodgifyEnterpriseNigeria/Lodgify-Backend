@@ -36,6 +36,7 @@ interface IOTP extends Document {
     purpose: "email_verification" | "2fa"
 }
 
+// models
 const OTPSchema = new mongoose.Schema<IOTP>({
     token: {
         type: Number,
@@ -60,11 +61,16 @@ const OTPSchema = new mongoose.Schema<IOTP>({
 }, { timestamps: true })
 OTPSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 }) // Automatically remove OTP after 5 minutes
 
-
 const sessionClientSchema = new mongoose.Schema<ISessionClient>({
-    oAuth:{
+    oAuth: {
         google: {
             googleId: { type: String, unique: true, sparse: true },
+        },
+        twitter: {
+            username: { type: String, unique: true, sparse: true },
+            accessToken: { type: String, unique: true, sparse: true },
+            refreshToken: { type: String, unique: true, sparse: true },
+            twitterId: { type: String, unique: true, sparse: true },
         }
     },
     email: {
@@ -99,18 +105,6 @@ const sessionClientSchema = new mongoose.Schema<ISessionClient>({
     }
 }, { timestamps: true });
 
-sessionClientSchema.pre('save', async function (next) {
-    if (!this.isModified('password')) return next();
-    this.password = await Bun.password.hash(this.password, "bcrypt");
-    next();
-});
-
-sessionClientSchema.methods.comparePassword = async function (inputPassword: string): Promise<boolean> {
-    return await Bun.password.verify(inputPassword, this.password);
-};
-
-
-// session creation
 const sessionSchema = new mongoose.Schema<ISession>({
     sessionClientId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -137,7 +131,18 @@ const sessionSchema = new mongoose.Schema<ISession>({
 });
 
 
+// pre actions
+sessionClientSchema.pre('save', async function (next) {
+    if (!this.isModified('password')) return next();
+    this.password = await Bun.password.hash(this.password, "bcrypt");
+    next();
+});
+
+sessionClientSchema.methods.comparePassword = async function (inputPassword: string): Promise<boolean> {
+    return await Bun.password.verify(inputPassword, this.password);
+};
+
+
 export const OTP = mongoose.model<IOTP>('OTP', OTPSchema)
 export const Session = mongoose.model<ISession>('Session', sessionSchema);
 export const SessionClient = mongoose.model<ISessionClient>('SessionClient', sessionClientSchema);
-

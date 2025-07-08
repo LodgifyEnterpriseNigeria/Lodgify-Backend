@@ -1,6 +1,6 @@
 import { CookieOptions } from "elysia";
 
-const isProduction = process.env.NODE_ENV === "production"
+const isProduction = Bun.env.NODE_ENV === "production"
 
 export const SessionAuthConfig = {  
     accessToken: {

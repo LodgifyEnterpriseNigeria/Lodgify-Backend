@@ -48,7 +48,7 @@ export function NavSecondary({
                 <SidebarMenu>
                     {items.map((item) => (
                         item.title === "Search" ? (
-                            <Search comand={comand} item={item} currentUrl={currentUrl} />
+                            <Search key={item.title} comand={comand} item={item} currentUrl={currentUrl} />
                         ) : (
                             <SidebarMenuItem key={item.title}>
                                 <SidebarMenuButton asChild

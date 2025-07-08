@@ -23,15 +23,30 @@ const adminHandleReferrals = new Elysia({
             const referrals = await Referral.find({
                 friends: { $exists: true, $not: { $size: 0 } },
             })
-                .populate<{ userId: IUserWithSession }>({
+                .populate<{
+                    userId: IUserWithSession;
+                    friends: {
+                        userId: IUserWithSession;
+                    }[];
+                }>({
                     path: "userId",
                     populate: {
                         path: "sessionClientId",
-                        model: "SessionClient", 
-                        select: "-password"// Replace with actual model name if different
-                    },
+                        model: "SessionClient",
+                        select: "-password"
+                    }
                 })
-                .populate("friends");
+                .populate({
+                    path: "friends",
+                    populate: {
+                        path: "userId",
+                        populate: {
+                            path: "sessionClientId",
+                            model: "SessionClient",
+                            select: "-password"
+                        }
+                    }
+                });
 
             const totalReferralsMade = referrals.reduce(
                 (sum, r) => sum + r.friends.length,
@@ -39,6 +54,10 @@ const adminHandleReferrals = new Elysia({
             );
 
             const activeAgents = referrals.filter(r => r.friends.length > 0).length;
+
+            const averageReferralRate = activeAgents > 0
+                ? parseFloat(((totalReferralsMade / activeAgents) * 100).toFixed(2))
+                : 0;
 
             const topReferrers = referrals
                 .filter(r => r.friends.length > 0 && r.userId?.sessionClientId)
@@ -57,8 +76,9 @@ const adminHandleReferrals = new Elysia({
             return SuccessHandler(set, "Referrals and analytics fetched", {
                 totalReferralsMade,
                 activeAgents,
+                averageReferralRate, // ✅ New metric here
                 topReferrers,
-                referrals, // Optional: full dump
+                referrals,
             });
         } catch (error) {
             return ErrorHandler.ServerError(
@@ -67,6 +87,6 @@ const adminHandleReferrals = new Elysia({
                 error
             );
         }
-    });
+    })
 
 export default adminHandleReferrals

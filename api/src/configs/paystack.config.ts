@@ -9,7 +9,7 @@ const PAYSTACK = axios.create({
 // Add a request interceptor
 PAYSTACK.interceptors.request.use(
     (config) => {
-        config.headers.Authorization = `Bearer ${process.env.PAYSTACK_SECRET_KEY}`;
+        config.headers.Authorization = `Bearer ${Bun.env.PAYSTACK_SECRET_KEY}`;
         return config;
     },
     (error) => {

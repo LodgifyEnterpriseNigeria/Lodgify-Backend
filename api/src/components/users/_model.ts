@@ -7,6 +7,10 @@ export interface IUser {
     username: string;
     gender: "male" | "female" | "other";
     address: string,
+    socialInfo: {
+        twitter?: string;
+        instagram?: string;
+    }
 }
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -32,7 +36,18 @@ const userSchema = new mongoose.Schema<IUser>({
     address: {
         type: String,
         default: ""
+    },
+    socialInfo: {
+        twitter: {
+            type: String,
+            default: ""
+        },
+        instagram: {
+            type: String,
+            default: ""
+        }
     }
+
 }, { timestamps: true });
 
 export const User = mongoose.model<IUser>('User', userSchema);

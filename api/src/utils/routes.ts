@@ -5,6 +5,8 @@ import adminPlugin from "../components/admin/_plugin";
 import notificationsPlugin from "../components/notification/_plugin";
 import referalPlugin from "../components/referral/_plugin";
 import taskPlugin from "../components/task/_plugin";
+import cronPlugin from "../components/jobs/_plugin";
+import { verifyJobPlugin } from "../middleware/cron.middleware";
 
 const routes = new Elysia()
     .get("/", () => "Server is up and running 🦊", { detail: { tags: ['Server Status'] } })
@@ -14,6 +16,8 @@ const routes = new Elysia()
     .use(notificationsPlugin)
     .use(referalPlugin)
     .use(taskPlugin)
+    .use(cronPlugin)
+    // .use(verifyJobPlugin)
 
 
-export default routes 
+export default routes;

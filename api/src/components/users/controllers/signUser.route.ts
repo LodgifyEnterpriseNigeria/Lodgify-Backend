@@ -48,9 +48,6 @@ const signUser = new Elysia()
                 sessionAccessJwt,
                 sessionRefreshJwt
             )
-
-            
-
             
             return SuccessHandler(
                 set,

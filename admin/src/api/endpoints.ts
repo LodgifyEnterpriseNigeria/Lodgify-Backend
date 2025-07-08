@@ -25,6 +25,11 @@ class Endpoint {
         console.log(response.data)
         return response.data;
     }
+    public static async getTasks() {
+        const response = await api.get('/task/admin/getTask');
+        console.log(response.data)
+        return response.data;
+    }
 }
 
 export default Endpoint

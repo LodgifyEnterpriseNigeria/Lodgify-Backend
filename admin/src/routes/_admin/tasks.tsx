@@ -1,5 +1,6 @@
+
 import { createFileRoute } from '@tanstack/react-router'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
@@ -17,22 +18,66 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { TaskCards } from '@/components/contents/tasks/cards'
 import TaskTable from '@/components/contents/tasks/dataTable'
 import { taskColumns } from '@/components/contents/tasks/columns'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export const Route = createFileRoute('/_admin/tasks')({
 	component: RouteComponent,
 })
 
 function RouteComponent() {
-	const dummyData: Array<any> = []
+	const { data, isLoading, isError } = useQuery({
+		queryKey: ['task-analytics'],
+		queryFn: Endpoint.getTasks,
+	})
+
+	const header = (
+		<Header
+			title='Airdrop Tasks' subText="Manage and create new airdrop tasks."
+		>
+			<CreateTaskDialog />
+		</Header>
+	)
+
+	if (isError) {
+		return (
+			<>
+				{header}
+				<div className="text-red-500">Failed to load referral data.</div>
+			</>
+		)
+	}
+
+	if (isLoading || !data?.data) {
+		return (
+			<>
+				{header}
+				<div className="space-y-6">
+					<Skeleton className="h-40 w-full" />
+					<Skeleton className="h-96 w-full" />
+				</div>
+			</>
+		)
+	}
+
+	const {
+		ongoingTasks,
+		totalCompletedTasks,
+		totalTasks,
+		tasks
+	} = data.data;
+
 	return (
 		<>
-			<Header title='Airdrop Tasks' subText="Manage and create new airdrop tasks.">
-				<CreateTaskDialog />
-			</Header>
+			{header}
 
-			<TaskCards />
+			<TaskCards
+				stats={{
+					ongoingTasks,
+					totalCompletedTasks,
+					totalTasks,
+				}} />
 
-			<TaskTable data={dummyData} columns={taskColumns} />
+			<TaskTable data={tasks} columns={taskColumns} />
 		</>
 	)
 }
@@ -41,12 +86,16 @@ function RouteComponent() {
 function CreateTaskDialog() {
 	const [step, setStep] = useState<0 | 1>(0)
 
+	const queryClient = useQueryClient();
+
+
 	const { mutateAsync: createTaskMutation, isPending } = useMutation({
 		mutationFn: Endpoint.createTask,
 		onSuccess: (data) => {
 			toast.success('Task created successfully', {
 				description: data.message,
 			})
+			queryClient.invalidateQueries({ queryKey: ['task-analytics'] });
 			form.reset();
 			setStep(0);
 		},
@@ -220,8 +269,8 @@ function CreateTaskDialog() {
 												<SelectContent>
 													<SelectItem value="x">X (Twitter)</SelectItem>
 													<SelectItem value="instagram">Instagram</SelectItem>
-													<SelectItem value="tiktok">TikTok</SelectItem>
-													<SelectItem value="youtube">YouTube</SelectItem>
+													{/* <SelectItem value="tiktok">TikTok</SelectItem>
+													<SelectItem value="youtube">YouTube</SelectItem> */}
 												</SelectContent>
 											</Select>
 											<FormMessage />
